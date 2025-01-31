@@ -1,37 +1,59 @@
 return {
-  {
-    "ggandor/leap.nvim",
-    keys = {
-      { "s", "<Plug>(leap-forward-to)", mode = { "n", "x", "o" }, desc = "Leap forward to" },
-      { "S", "<Plug>(leap-backward-to)", mode = { "n", "x", "o" }, desc = "Leap backward to" },
-      { "x", "<Plug>(leap-forward-till)", mode = { "x", "o" }, desc = "Leap forward till" },
-      { "X", "<Plug>(leap-backward-till)", mode = { "x", "o" }, desc = "Leap backward till" },
-      { "gs", "<Plug>(leap-from-window)", mode = { "n", "x", "o" }, desc = "Leap from window" },
-    },
-    opts = {},
-    init = function() -- https://github.com/ggandor/leap.nvim/issues/70#issuecomment-1521177534
-      vim.api.nvim_create_autocmd("User", {
-        callback = function()
-          vim.cmd.hi("Cursor", "blend=100")
-          vim.opt.guicursor:append { "a:Cursor/lCursor" }
-        end,
-        pattern = "LeapEnter",
-      })
-      vim.api.nvim_create_autocmd("User", {
-        callback = function()
-          vim.cmd.hi("Cursor", "blend=0")
-          vim.opt.guicursor:remove { "a:Cursor/lCursor" }
-        end,
-        pattern = "LeapLeave",
-      })
-    end,
-    dependencies = {
-      "tpope/vim-repeat",
+  "ggandor/leap.nvim",
+  dependencies = {
+    "tpope/vim-repeat",
+    {
+      "AstroNvim/astrocore",
+      opts = {
+        autocmds = vim.version().minor < 10
+            and {
+              leap_cursor = { -- https://github.com/ggandor/leap.nvim/issues/70#issuecomment-1521177534
+                {
+                  event = "User",
+                  pattern = "LeapEnter",
+                  callback = function()
+                    vim.cmd.hi("Cursor", "blend=100")
+                    vim.opt.guicursor:append { "a:Cursor/lCursor" }
+                  end,
+                },
+                {
+                  event = "User",
+                  pattern = "LeapLeave",
+                  callback = function()
+                    vim.cmd.hi("Cursor", "blend=0")
+                    vim.opt.guicursor:remove { "a:Cursor/lCursor" }
+                  end,
+                },
+              },
+            }
+          or {},
+        mappings = {
+          n = {
+            ["s"] = { "<Plug>(leap-forward)", desc = "Leap forward" },
+            ["S"] = { "<Plug>(leap-backward)", desc = "Leap backward" },
+            ["gs"] = { "<Plug>(leap-from-window)", desc = "Leap from window" },
+          },
+          x = {
+            ["s"] = { "<Plug>(leap-forward)", desc = "Leap forward" },
+            ["S"] = { "<Plug>(leap-backward)", desc = "Leap backward" },
+            ["gs"] = { "<Plug>(leap-from-window)", desc = "Leap from window" },
+          },
+          o = {
+            ["s"] = { "<Plug>(leap-forward)", desc = "Leap forward" },
+            ["S"] = { "<Plug>(leap-backward)", desc = "Leap backward" },
+            ["gs"] = { "<Plug>(leap-from-window)", desc = "Leap from window" },
+          },
+        },
+      },
     },
   },
-  {
-    "catppuccin/nvim",
-    optional = true,
-    opts = { integrations = { leap = true } },
+  specs = {
+    {
+      "catppuccin",
+      optional = true,
+      ---@type CatppuccinOptions
+      opts = { integrations = { leap = true } },
+    },
   },
+  opts = {},
 }

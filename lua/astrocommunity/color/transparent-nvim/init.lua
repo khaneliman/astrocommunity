@@ -1,45 +1,35 @@
-local prefix = "<leader>u"
 return {
   "xiyaowong/transparent.nvim",
   lazy = false,
   opts = {
-    -- table: default groups
-    groups = {
-      "Normal",
-      "NormalNC",
-      "Comment",
-      "Constant",
-      "Special",
-      "Identifier",
-      "Statement",
-      "PreProc",
-      "Type",
-      "Underlined",
-      "Todo",
-      "String",
-      "Function",
-      "Conditional",
-      "Repeat",
-      "Operator",
-      "Structure",
-      "LineNr",
-      "NonText",
-      "SignColumn",
-      "CursorLineNr",
-      "EndOfBuffer",
-    },
-    -- table: additional groups that should be cleared
     extra_groups = {
       "NormalFloat",
       "NvimTreeNormal",
-      "NeoTreeNormal",
-      "NeoTreeFloatBorder",
-      "NeoTreeNormalNC",
     },
-    -- table: groups you don't want to clear
-    exclude_groups = {},
   },
-  keys = {
-    { prefix .. "T", "<cmd>TransparentToggle<CR>", desc = "Toggle transparency" },
+  config = function(_, opts)
+    local transparent = require "transparent"
+    transparent.setup(opts)
+    transparent.clear_prefix "BufferLine"
+    transparent.clear_prefix "NeoTree"
+    transparent.clear_prefix "lualine"
+  end,
+  dependencies = {
+    {
+      "AstroNvim/astrocore",
+      opts = function(_, opts)
+        opts.mappings.n["<Leader>uT"] = { "<Cmd>TransparentToggle<CR>", desc = "Toggle transparency" }
+        if vim.tbl_get(opts, "autocmds", "heirline_colors") then
+          table.insert(opts.autocmds.heirline_colors, {
+            event = "User",
+            pattern = "TransparentClear",
+            desc = "Refresh heirline colors",
+            callback = function()
+              if package.loaded["heirline"] then require("astroui.status.heirline").refresh_colors() end
+            end,
+          })
+        end
+      end,
+    },
   },
 }

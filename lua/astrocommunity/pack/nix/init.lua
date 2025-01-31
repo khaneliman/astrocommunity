@@ -1,28 +1,46 @@
-local utils = require "astronvim.utils"
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    optional = true,
     opts = function(_, opts)
       if opts.ensure_installed ~= "all" then
-        opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "nix")
+        opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "nix" })
       end
     end,
   },
   {
-    "williamboman/mason-lspconfig.nvim",
-    opts = function(_, opts) opts.ensure_installed = utils.list_insert_unique(opts.ensure_installed, "rnix") end,
-  },
-  {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
+    optional = true,
     opts = function(_, opts)
-      local nls = require "null-ls"
-      if type(opts.sources) == "table" then
-        vim.list_extend(opts.sources, {
-          nls.builtins.code_actions.statix,
-          nls.builtins.formatting.alejandra,
-          nls.builtins.diagnostics.deadnix,
-        })
-      end
+      local builtins = require("null-ls").builtins
+      opts.sources = require("astrocore").list_insert_unique(opts.sources, {
+        builtins.code_actions.statix,
+        builtins.formatting.alejandra,
+        builtins.diagnostics.deadnix,
+      })
     end,
+  },
+  {
+    "AstroNvim/astrolsp",
+    optional = true,
+    opts = function(_, opts) opts.servers = require("astrocore").list_insert_unique(opts.servers, { "nixd" }) end,
+  },
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        nix = { "alejandra" },
+      },
+    },
+  },
+  {
+    "mfussenegger/nvim-lint",
+    optional = true,
+    opts = {
+      linters_by_ft = {
+        nix = { "statix", "deadnix" },
+      },
+    },
   },
 }

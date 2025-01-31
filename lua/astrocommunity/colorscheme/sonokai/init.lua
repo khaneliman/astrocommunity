@@ -1,4 +1,10 @@
 return {
   "sainnhe/sonokai",
-  init = function() vim.g.sonokai_dim_inactive_windows = 1 end,
+  lazy = true,
+  dependencies = {
+    "AstroNvim/astrocore",
+    opts = { options = { g = {
+      sonokai_dim_inactive_windows = 1,
+    } } },
+  },
 }
