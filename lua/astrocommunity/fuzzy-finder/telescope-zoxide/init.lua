@@ -1,12 +1,23 @@
 return {
-  "nvim-telescope/telescope.nvim",
-  dependencies = { "jvgrootveld/telescope-zoxide" },
-  keys = {
+  "jvgrootveld/telescope-zoxide",
+  lazy = true,
+  specs = {
     {
-      "<leader>fz",
-      "<cmd>Telescope zoxide list<CR>",
-      desc = "Find directories",
+      "nvim-telescope/telescope.nvim",
+      dependencies = {
+        "jvgrootveld/telescope-zoxide",
+        {
+          "AstroNvim/astrocore",
+          opts = {
+            mappings = {
+              n = {
+                ["<Leader>fz"] = { "<Cmd>Telescope zoxide list<CR>", desc = "Find directories" },
+              },
+            },
+          },
+        },
+      },
+      opts = function() require("telescope").load_extension "zoxide" end,
     },
   },
-  opts = function() require("telescope").load_extension "zoxide" end,
 }
