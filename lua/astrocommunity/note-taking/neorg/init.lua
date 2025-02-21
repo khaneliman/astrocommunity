@@ -1,8 +1,8 @@
 return {
   "nvim-neorg/neorg",
-  build = ":Neorg sync-parsers",
-  dependencies = { "nvim-lua/plenary.nvim" },
+  version = "^8",
   event = "VeryLazy",
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
   opts = {
     load = {
       ["core.defaults"] = {}, -- Loads default behaviour
@@ -19,6 +19,7 @@ return {
           workspaces = {
             notes = "~/projects/notes",
           },
+          default_workspace = "notes",
         },
       },
     },
