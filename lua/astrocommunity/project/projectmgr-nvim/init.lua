@@ -1,7 +1,16 @@
 return {
   "charludo/projectmgr.nvim",
-  event = "VeryLazy",
-  keys = {
-    { "<leader>P", "<cmd>ProjectMgr<cr>", desc = "Open ProjectMgr panel" },
+  lazy = false, -- important!
+  dependencies = {
+    {
+      "AstroNvim/astrocore",
+      opts = {
+        mappings = {
+          n = {
+            ["<Leader>P"] = { "<Cmd>ProjectMgr<CR>", desc = "Open ProjectMgr panel" },
+          },
+        },
+      },
+    },
   },
 }

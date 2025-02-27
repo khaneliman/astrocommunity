@@ -1,33 +1,24 @@
 # Clojure Language Pack
 
-Requires:
-
-- Java Development Kit, e.g. `JDK-17`
-- [Clojure CLI](https://clojure.org/guides/install_clojure) or [Leiningen](https://leiningen.org/)
-
-This plugin pack does the following:
-
-- Adds `clojure` treesitter parsers
-- Adds `clojure_ls` language server
-- Adds [Olical/conjure](https://github.com/Olical/conjure) and [gpanders/nvim-parinfer](https://github.com/gpanders/nvim-parinfer) plugins
-- Add autocmd to disable lsp diagnostics in Conjure log
-- Add autocmd to configure comments to Clojure style guide
-
-## Additional Config
-
-Add a localleader mapping to the user config (if not defined in AstroNvim) to enable Conjure key mappings, e.g. `, e r` to evaluate top level root
-
-Define a localleader mapping in `options.lua`
+Include the Clojure language pack in the `lua/community.lua` file
 
 ```lua
-return {
-  g = {
-    mapleader = " ",                 -- sets vim.g.mapleader
-    maplocalleader = ",",            -- Set local leader key binding
-    -- additional options...
-  },
-}
+  { import = "astrocommunity.pack.clojure" },
 ```
+
+The Clojure pack requires:
+
+- Java Development Kit, e.g. [Practicalli - Install Java host for Clojure](https://practical.li/clojure/install/java/)
+- [Clojure CLI](https://clojure.org/guides/install_clojure) or [Leiningen](https://leiningen.org/)
+
+The Clojure language pack includes:
+
+- `clojure` treesitter parsers
+- [clojure-lsp](https://clojure-lsp.io/) language server
+- Clojure REPL client: [Olical/conjure](https://github.com/Olical/conjure)
+- Structural editing: [gpanders/nvim-parinfer](https://github.com/gpanders/nvim-parinfer) & [PaterJason/nvim-treesitter-sexp](https://github.com/PaterJason/nvim-treesitter-sexp)
+
+> NOTE: Conjure is available as a [code-runner](https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/code-runner) plugin config. nvim-treesitter-sexp and nvim-parinfer are available as [editing-support plugin configurations](https://github.com/AstroNvim/astrocommunity/tree/main/lua/astrocommunity/editing-support)
 
 ## Clojure Guides
 
@@ -35,4 +26,35 @@ return {
 
 - [Clojure.org](https://clojure.org/index) API reference and guides
 - [Conjure - Clojure guide](https://github.com/Olical/conjure/wiki/Quick-start:-Clojure)
-- [Practicalli Neovim](https://practical.li/neovim/) Clojure development workflow
+- [Practicalli Neovim](https://practical.li/neovim/) Clojure development workflow and examples of [configuring Astrocommunity clojure pack](https://practical.li/neovim/configuration/astronvim/astrocommunity/)
+
+
+## Override Configuration
+
+Plugins in the language pack can be disabled and default options overridden.
+
+Example: Include the Clojure language pack and disable the parinfer plugin by setting the `enabled` key to false.
+
+```lua
+  { import = "astrocommunity.pack.clojure" },
+  { "gpanders/nvim-parinfer", enabled = false },
+```
+
+Example: Change the test runner used by Conjure. `clojure.test` runner is used by default
+
+```lua
+  { import = "astrocommunity.pack.clojure" },
+  {
+    "AstroNvim/astrocore",
+    opts = {
+      options = {
+        g = {
+          -- Set Test runner: "clojure", "clojurescript", "kaocha"
+          ["conjure#client#clojure#nrepl#test#runner"] = "kaocha",
+        },
+      },
+    },
+  },
+```
+
+> NOTE: `:help conjure-client-clojure-nrepl` for full list of Conjure options for Clojure.
